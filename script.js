@@ -1,36 +1,64 @@
-document.querySelector("form").addEventListener("submit", function(event) {
-    event.preventDefault();
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const submitBtn = document.getElementById('submitBtn');
 
-    var nameRegex = /^[a-zA-Z]+$/;
-    var EmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    var passwordRegex = /^.{6,}$/;
+const nameError = document.getElementById('nameError');
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
 
-    var name = document.getElementById("name");
-    var email = document.getElementById("email");
-    var password = document.getElementById("password");
+function validateForm() {
+    let valid = true;
 
-    var valid = true;
-
-    // Hide all errors initially
-    document.querySelector(".nameError").style.display = "none";
-    document.querySelector(".emailError").style.display = "none";
-    document.querySelector(".passwordError").style.display = "none";
-
-    if (!nameRegex.test(name.value)) {
-        document.querySelector(".nameError").style.display = "inline";
+    if (nameInput.value.trim() === '') {
+        nameError.textContent = "Name cannot be empty.";
         valid = false;
-    }
-    if (!EmailRegex.test(email.value)) {
-        document.querySelector(".emailError").style.display = "inline";
-        valid = false;
-    }
-    if (!passwordRegex.test(password.value)) {
-        document.querySelector(".passwordError").style.display = "inline";
-        valid = false;
+    } else {
+        nameError.textContent = '';
     }
 
-    if (valid) {
-        alert("Form submitted successfully!");
-        this.submit();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value.trim())) {
+        emailError.textContent = "Enter a valid email address.";
+        valid = false;
+    } else {
+        emailError.textContent = '';
     }
+
+    if (passwordInput.value.length < 6) {
+        passwordError.textContent = "Password must be at least 6 characters.";
+        valid = false;
+    } else {
+        passwordError.textContent = '';
+    }
+
+    submitBtn.disabled = !valid;
+    submitBtn.classList.toggle('enabled', valid);
+}
+
+nameInput.addEventListener('input', validateForm);
+emailInput.addEventListener('input', validateForm);
+passwordInput.addEventListener('input', validateForm);
+
+// Character Counter
+const messageBox = document.getElementById('message');
+const charCount = document.getElementById('charCount');
+const charWarning = document.getElementById('charWarning');
+const maxChars = 200;
+
+messageBox.addEventListener('input', () => {
+    const currentLength = messageBox.value.length;
+    charCount.textContent = `${currentLength}/${maxChars} characters`;
+
+    if (currentLength >= maxChars) {
+        charWarning.textContent = "Character limit reached!";
+    } else {
+        charWarning.textContent = "";
+    }
+});
+
+// Prevent form submission for demo
+document.getElementById('registrationForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert("Form submitted successfully!");
 });
